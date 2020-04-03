@@ -1,5 +1,5 @@
 from flask import Flask
-
+from app.database import create_database
 # Define App Creator ->
 
 
@@ -11,11 +11,12 @@ def create_app():
     # Create Sanity Check Route
     @app.route('/')
     def index():
-        return f'MONGO_URI = {app.config.get("MONGO_URI")}'
-
+        return f'TestString'
+    # Initialize Database
+    db = create_database(app)
+    # db = create_database(app)
     # Create server runner
     if __name__ == '__main__':
         app.run(debug=True)
-
     # Return creator
     return app
