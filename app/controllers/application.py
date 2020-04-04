@@ -1,10 +1,11 @@
 from flask import request, jsonify
+from app.scripts import evaluateRisk
 
 
 def post_application(db):
     try:
         _json = request.json
-        print(_json)
+        final_risk = evaluateRisk(_json)
         _age = _json['age']
         _dependents = _json['dependents']
         _house = _json['house']
@@ -24,13 +25,11 @@ def post_application(db):
                     "marital_status": _marital_status,
                     "risk_questions": _risk_questions,
                     "vehicle": _vehicle
-                }
+                },
+                "risk": final_risk
             })
             # Response ->
-            response = jsonify(
-                f'Application {application} was successfully stored!')
-            response.status_code = 200
-            return response
+            return jsonify(final_risk)
         else:
             print('reached else')
             raise Exception('Bad Request')

@@ -19,10 +19,6 @@ def create_app():
     def index():
         return jsonify({'status': 'App Running'})
 
-    @app.route('/risk')
-    def risk():
-        return evaluateRisk()
-
     @app.route("/api/user/application", methods=['POST'])
     def post():
         return post_application(db)
