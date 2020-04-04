@@ -3,7 +3,9 @@ from flask import Flask, jsonify, request
 # Module imports
 from app.database import init_database
 from app.controllers.application import post_application
+from app.scripts import evaluateRisk
 # Define App Creator ->
+
 
 def create_app():
     # Create server entity
@@ -16,6 +18,10 @@ def create_app():
     @app.route('/')
     def index():
         return jsonify({'status': 'App Running'})
+
+    @app.route('/risk')
+    def risk():
+        return evaluateRisk()
 
     @app.route("/api/user/application", methods=['POST'])
     def post():
