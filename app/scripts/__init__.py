@@ -32,14 +32,6 @@ def evaluateRisk(json):
     # Add Base_Risk to all factors
     for key, value in temp.items():
         temp[key] = value + base_risk
-    # Ineligibility Check
-    # +-> User doesn't have asset ->
-    if json['vehicle'] == 0 or json['vehicle'] == "" or len(json['vehicle']) == 0:
-        final_risk['auto'] = outcomes[4]
-    if json['income'] == 0 or json['income'] == "":
-        final_risk['disability'] = outcomes[4]
-    if json['house'] == 0 or json['house'] == "" or len(json['house']) == 0:
-        final_risk['home'] = outcomes[4]
     # +-> Age Check ->
     if json['age'] > 60:
         final_risk['disability'] = outcomes[4]
@@ -51,11 +43,15 @@ def evaluateRisk(json):
         for key, value in temp.items():
             temp[key] = value - 1
     # +-> Income Check ->
-    if json['income'] > 200000:
+    if json['income'] == 0 or json['income'] == "":
+        final_risk['disability'] = outcomes[4]
+    elif json['income'] > 200000:
         for key, value in temp.items():
             temp[key] = value - 1
     # +-> House Check ->
-    if json['house'] == {"ownership_status": "mortgaged"}:
+    if json['house'] == 0 or json['house'] == "" or len(json['house']) == 0:
+        final_risk['home'] = outcomes[4]
+    elif next(iter(json['house'].values())) == "mortgaged":
         temp['disability'] += 1
         temp['home'] += 1
     # +-> Dependants Check ->
@@ -67,9 +63,12 @@ def evaluateRisk(json):
         temp['disability'] -= 1
         temp['life'] += 1
     # +-> Vehicle Check ->
-    if next(iter(json['vehicle'].values())) in range(year, year-6):
+    if json['vehicle'] == 0 or json['vehicle'] == "" or len(json['vehicle']) == 0:
+        final_risk['auto'] = outcomes[4]
+    elif next(iter(json['vehicle'].values())) in range(year, year-6):
         # I Imagined that this would subtract from the auto score, but the instructions mentioned add 1 risk point
-        temp['auto'] += 1
+        # ! After checking the expected output for the test scenario, concluded that this is a subtraction ->
+        temp['auto'] -= 1
     # Construct Output ->
     # Translate temp values to outcomes
     for key, value in temp.items():
