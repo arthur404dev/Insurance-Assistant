@@ -65,11 +65,11 @@ def evaluateRisk(json):
     # +-> Vehicle Check ->
     if json['vehicle'] == 0 or json['vehicle'] == "" or len(json['vehicle']) == 0:
         final_risk['auto'] = outcomes[4]
-    elif next(iter(json['vehicle'].values())) in range(year, year-6):
+    elif int(next(iter(json['vehicle'].values()))) in range(year, year-6, -1):
         # I Imagined that this would subtract from the auto score, but the instructions mentioned add 1 risk point
-        # ! After checking the expected output for the test scenario, concluded that this is a subtraction ->
-        temp['auto'] -= 1
+        temp['auto'] += 1
     # Construct Output ->
+    print(temp)
     # Translate temp values to outcomes
     for key, value in temp.items():
         if value <= 0:
