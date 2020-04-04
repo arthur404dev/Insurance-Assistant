@@ -1,11 +1,12 @@
-from flask_pymongo import pymongo
+from flask_pymongo import MongoClient
 
 
-def create_database(app):
+def init_database(app):
     # Initialize the Database Connection
-    client = pymongo.MongoClient(app.config.get("MONGO_URI"))
+    client = MongoClient(app.config.get("MONGO_URI"))
     db_name = app.config.get("MONGO_DBNAME")
+    database = client[db_name]
     print(
         f" * -> Connected to MongoDB Atlas! - DB: {db_name} ")
     # Return mongoDBAtlas client
-    return client
+    return database
